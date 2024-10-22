@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Libros</title>
+</head>
+<body>
+<h1>Lista de Libros</h1>
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Título</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="book : ${books}">
+    <td th:text="${book.id}"></td>
+    <td th:text="${book.title}"></td>
+    <td>
+      <a th:href="@{/edit/{id}(id=${book.id})}"
+         sec:authorize="hasAnyAuthority('ADMIN', 'EDITOR')">Editar</a>
+
+      <!-- Botón Eliminar: Solo visible para ADMIN -->
+      <span sec:authorize="hasAuthority('ADMIN')"> |
+              <a th:href="@{/delete/{id}(id=${book.id})}"
+                 onclick="return confirm('¿Estás seguro de que quieres eliminar este libro?');">
+                Eliminar
+              </a>
+      </span>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<a href="/new" sec:authorize="hasAnyAuthority('ADMIN', 'CREATOR')">Crear nuevo libro</a>
+<a href="/logout">Cerrar sesión</a>
+</body>
+</html>
